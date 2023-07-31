@@ -231,6 +231,23 @@ class TestGenerateAuthToken(unittest.TestCase):
 
     @mock.patch(
         "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
+        ".__load_credentials_from_aws_credentials_provider__"
+    )
+    def test_generate_auth_token_with_empty_credentials(self,
+                                                        load_credentials):
+        mock_credentials = Credentials("", "")
+        load_credentials.return_value = mock_credentials
+        credential_provider = botocore.credentials.ContainerProvider()
+
+        expected_error_message = "AWS Credentials can not be empty"
+
+        with self.assertRaisesRegex(ValueError, expected_error_message):
+            generate_auth_token_from_credentials_provider(
+                self.region, credential_provider
+            )
+
+    @mock.patch(
+        "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
         ".__load_default_credentials__"
     )
     @mock.patch(

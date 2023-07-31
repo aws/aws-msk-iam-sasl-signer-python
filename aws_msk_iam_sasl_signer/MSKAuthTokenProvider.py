@@ -203,6 +203,10 @@ def __construct_auth_token(region, aws_credentials):
     aws_credentials (dict): The credentials to be used to generate signed
     url. Returns: str: A base64-encoded authorization token.
     """
+    # Validate credentials are not empty
+    if not aws_credentials.access_key or not aws_credentials.secret_key:
+        raise ValueError("AWS Credentials can not be empty")
+
     # Extract endpoint URL
     endpoint_url = ENDPOINT_URL_TEMPLATE.format(region)
 
