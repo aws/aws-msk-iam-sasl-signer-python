@@ -179,6 +179,21 @@ To run tests with coverage information, run:
     $ coverage run --source=aws_msk_iam_sasl_signer.MSKAuthTokenProvider -m pytest tests/test_auth_token_provider.py
     $ coverage report -m
 
+
+Troubleshooting
+------------
+Finding out which identity is being used
+------------
+You may receive an Access denied error and there may be some doubt as to which credential is being exactly used. The credential may be sourced from a role ARN, EC2 instance profile, credential profile etc.
+If the client side logging is set to DEBUG then the signer library will print a debug log of the form:
+
+.. code-block:: sh
+
+    Credentials Identity: {UserId: ABCD:test124, Account: 1234567890, Arn: arn:aws:sts::1234567890:assumed-role/abc/test124}
+
+
+The log line provides the IAM Account, IAM user id and the ARN of the IAM Principal corresponding to the credential being used.
+
 Getting Help
 ------------
 
