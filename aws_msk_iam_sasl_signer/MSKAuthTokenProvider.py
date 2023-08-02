@@ -12,8 +12,6 @@ from botocore.awsrequest import AWSRequest
 from botocore.config import Config
 from botocore.credentials import CredentialProvider, Credentials
 
-logging.basicConfig(level=logging.INFO)
-
 ENDPOINT_URL_TEMPLATE = "https://kafka.{}.amazonaws.com/"
 DEFAULT_TOKEN_EXPIRY_SECONDS = 900
 DEFAULT_STS_SESSION_NAME = "MSKSASLDefaultSession"
@@ -207,6 +205,9 @@ def __construct_auth_token(region, aws_credentials):
     if not aws_credentials.access_key or not aws_credentials.secret_key:
         raise ValueError("AWS Credentials can not be empty")
 
+    if logging.getLogger().isEnabledFor(logging.DEBUG):
+        __log_caller_identity(aws_credentials)
+
     # Extract endpoint URL
     endpoint_url = ENDPOINT_URL_TEMPLATE.format(region)
 
@@ -231,11 +232,29 @@ def __construct_auth_token(region, aws_credentials):
     # Get the signed url
     signed_url = prepped.url
 
-    # TODO : Remove logging here and add caller identity logging
-    logging.debug("Signed URL: %s", signed_url)
-
     # Base 64 encode and remove the padding from the end
     signed_url_bytes = signed_url.encode("utf-8")
     base64_bytes = base64.urlsafe_b64encode(signed_url_bytes)
     base64_encoded_signed_url = base64_bytes.decode("utf-8").rstrip("=")
     return base64_encoded_signed_url
+
+
+def __log_caller_identity(aws_credentials):
+    """
+    Private function that logs the caller identity
+
+    Args: aws_credentials (dict): The credentials to be used to generate signed
+    url
+    """
+    # Create sts client
+    sts_client = boto3.client("sts",
+                              aws_access_key_id=aws_credentials.access_key,
+                              aws_secret_access_key=aws_credentials.secret_key,
+                              aws_session_token=aws_credentials.token)
+    # Get caller identity
+    caller_identity = sts_client.get_caller_identity()
+    # Log the identity in debug mode
+    logging.debug("Credentials Identity: {UserId: %s, Account: %s, Arn: %s}",
+                  caller_identity.get('UserId'),
+                  caller_identity.get('Account'),
+                  caller_identity.get('Arn'))
