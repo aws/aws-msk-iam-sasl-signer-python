@@ -58,7 +58,8 @@ Get Started
 
     class MSKTokenProvider():
         def token(self):
-            return MSKAuthTokenProvider.generate_auth_token('<my aws region>')
+            token, _ = MSKAuthTokenProvider.generate_auth_token('<my aws region>')
+            return token
 
     tp = MSKTokenProvider()
 
@@ -89,11 +90,10 @@ Get Started
     from confluent_kafka import Consumer
     import socket
     import time
-    import traceback
     from aws_msk_iam_sasl_signer import MSKAuthTokenProvider
 
     def oauth_cb(oauth_config):
-        return MSKAuthTokenProvider.generate_auth_token("<my aws region>"), time.time() + 900.0
+        return MSKAuthTokenProvider.generate_auth_token("<my aws region>")
 
     c = Consumer({
         "debug": "all",
@@ -128,7 +128,7 @@ Get Started
 
     class MSKTokenProvider():
         def token(self):
-            oauth2_token = MSKAuthTokenProvider.generate_auth_token_from_profile('<your aws region>', '<named_profile>')
+            oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_profile('<your aws region>', '<named_profile>')
             return oauth2_token
 
 * In order to use a role arn to generate token, replace the token() function with code below :
@@ -137,7 +137,7 @@ Get Started
 
     class MSKTokenProvider():
         def token(self):
-            oauth2_token = MSKAuthTokenProvider.generate_auth_token_from_role_arn('<your aws region>', '<role_arn>')
+            oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_role_arn('<your aws region>', '<role_arn>')
             return oauth2_token
 
 
@@ -147,7 +147,7 @@ Get Started
 
     class MSKTokenProvider():
         def token(self):
-            oauth2_token = MSKAuthTokenProvider.generate_auth_token_from_credentials_provider('<your aws region>', '<your_credentials_provider')
+            oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_credentials_provider('<your aws region>', '<your_credentials_provider')
             return oauth2_token
 
 

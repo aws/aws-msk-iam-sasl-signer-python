@@ -41,14 +41,14 @@ def execute(ctx, region, aws_profile, role_arn, sts_session_name):
     validate_options(ctx)
 
     if aws_profile:
-        token = generate_auth_token_from_profile(region, aws_profile)
+        response = generate_auth_token_from_profile(region, aws_profile)
     elif role_arn:
-        token = generate_auth_token_from_role_arn(region, role_arn,
-                                                  sts_session_name)
+        response = generate_auth_token_from_role_arn(region, role_arn,
+                                                     sts_session_name)
     else:
-        token = generate_auth_token(region)
+        response = generate_auth_token(region)
 
-    click.echo(token)
+    click.echo(response)
 
 
 if __name__ == "__main__":
