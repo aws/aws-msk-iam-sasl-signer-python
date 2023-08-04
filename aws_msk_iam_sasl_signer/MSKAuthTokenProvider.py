@@ -3,6 +3,8 @@
 
 import base64
 import logging
+from datetime import datetime
+from urllib.parse import parse_qs, urlparse
 
 import boto3
 import botocore.session
@@ -236,7 +238,29 @@ def __construct_auth_token(region, aws_credentials):
     signed_url_bytes = signed_url.encode("utf-8")
     base64_bytes = base64.urlsafe_b64encode(signed_url_bytes)
     base64_encoded_signed_url = base64_bytes.decode("utf-8").rstrip("=")
-    return base64_encoded_signed_url
+    return base64_encoded_signed_url, __get_expiration_time_ms(request)
+
+
+def __get_expiration_time_ms(request):
+    """
+    Private function that parses the url and gets the expiration time
+
+    Args: request (AWSRequest): The signed aws request object
+    """
+    # Parse the signed request
+    parsed_url = urlparse(request.url)
+    parsed_ul_params = parse_qs(parsed_url.query)
+    signing_time = datetime.strptime(parsed_ul_params['X-Amz-Date'][0],
+                                     "%Y%m%dT%H%M%SZ")
+
+    # Convert the Unix timestamp to milliseconds
+    expiration_timestamp_seconds = int(
+        signing_time.timestamp()) + DEFAULT_TOKEN_EXPIRY_SECONDS
+
+    # Get lifetime of token
+    expiration_timestamp_ms = expiration_timestamp_seconds * 1000
+
+    return expiration_timestamp_ms
 
 
 def __log_caller_identity(aws_credentials):

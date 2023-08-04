@@ -180,9 +180,9 @@ class TestGenerateAuthToken(unittest.TestCase):
             self.mock_access_key, self.mock_secret_key, self.mock_token
         )
         mock_load_credentials.return_value = mock_credentials
-        auth_token = generate_auth_token(self.region)
+        auth_token, expiry_ms = generate_auth_token(self.region)
 
-        self.assertTokenIsAsExpected(auth_token)
+        self.assertTokenIsAsExpected(auth_token, expiry_ms)
 
     @mock.patch(
         "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
@@ -193,10 +193,10 @@ class TestGenerateAuthToken(unittest.TestCase):
             self.mock_access_key, self.mock_secret_key, self.mock_token
         )
         mock_load_credentials.return_value = mock_credentials
-        auth_token = generate_auth_token_from_profile(self.region,
-                                                      self.aws_profile)
+        auth_token, expiry_ms = generate_auth_token_from_profile(
+            self.region, self.aws_profile)
 
-        self.assertTokenIsAsExpected(auth_token)
+        self.assertTokenIsAsExpected(auth_token, expiry_ms)
 
     @mock.patch(
         "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
@@ -207,10 +207,10 @@ class TestGenerateAuthToken(unittest.TestCase):
             self.mock_access_key, self.mock_secret_key, self.mock_token
         )
         mock_load_credentials.return_value = mock_credentials
-        auth_token = generate_auth_token_from_role_arn(self.region,
-                                                       self.aws_profile)
+        auth_token, expiry_ms = generate_auth_token_from_role_arn(
+            self.region, self.aws_profile)
 
-        self.assertTokenIsAsExpected(auth_token)
+        self.assertTokenIsAsExpected(auth_token, expiry_ms)
 
     @mock.patch(
         "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
@@ -223,11 +223,11 @@ class TestGenerateAuthToken(unittest.TestCase):
         )
         load_credentials.return_value = mock_credentials
         credential_provider = botocore.credentials.ContainerProvider()
-        auth_token = generate_auth_token_from_credentials_provider(
+        auth_token, expiry_ms = generate_auth_token_from_credentials_provider(
             self.region, credential_provider
         )
 
-        self.assertTokenIsAsExpected(auth_token)
+        self.assertTokenIsAsExpected(auth_token, expiry_ms)
 
     @mock.patch(
         "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
@@ -273,7 +273,8 @@ class TestGenerateAuthToken(unittest.TestCase):
         result = runner.invoke(cli.execute, ["--region", self.region])
 
         self.assertEqual(result.exit_code, 0)
-        self.assertTokenIsAsExpected(result.output)
+        output = result.output.strip()[1:-1].split(", ")
+        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
 
         result = runner.invoke(
             cli.execute,
@@ -281,14 +282,16 @@ class TestGenerateAuthToken(unittest.TestCase):
         )
 
         self.assertEqual(result.exit_code, 0)
-        self.assertTokenIsAsExpected(result.output)
+        output = result.output.strip()[1:-1].split(", ")
+        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
 
         result = runner.invoke(
             cli.execute, ["--region", self.region, "--role-arn", self.role_arn]
         )
 
         self.assertEqual(result.exit_code, 0)
-        self.assertTokenIsAsExpected(result.output)
+        output = result.output.strip()[1:-1].split(", ")
+        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
 
         help_result = runner.invoke(cli.execute, ["--help"])
         self.assertEqual(help_result.exit_code, 0)
@@ -313,8 +316,9 @@ class TestGenerateAuthToken(unittest.TestCase):
         self.assertEqual(result.exit_code, 2)
         self.assertEqual(result.return_value, None)
 
-    def assertTokenIsAsExpected(self, auth_token):
+    def assertTokenIsAsExpected(self, auth_token, expiry_ms):
         self.assertIsNotNone(auth_token)
+        self.assertIsNotNone(expiry_ms)
 
         # Add padding to ensure decoding does not complain of no padding
         padded_auth_token = auth_token + "===="
@@ -343,3 +347,6 @@ class TestGenerateAuthToken(unittest.TestCase):
         self.assertTrue(date_obj < datetime.utcnow())
 
         self.assertTrue(query_params["User-Agent"][0].startswith(LIB_NAME))
+        actual_expiration_ms = 1000 * (
+                int(query_params["X-Amz-Expires"][0]) + date_obj.timestamp())
+        self.assertEqual(expiry_ms, actual_expiration_ms)
