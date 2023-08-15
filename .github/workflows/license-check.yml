@@ -40,7 +40,7 @@ jobs:
               working-directory: ./scancode-toolkit
               run: ./scancode --help
             - name: Run Scan code on pr ref
-              run: cat targetFiles.txt | while read filename; do echo ./sdkbase/$filename; done | xargs ./scancode-toolkit/scancode -l -n 30 --json-pp - | grep short_name | sort | uniq >> old-licenses.txt
+              run: cat targetFiles.txt | while read filename; do echo ./signermain/$filename; done | xargs ./scancode-toolkit/scancode -l -n 30 --json-pp - | grep short_name | sort | uniq >> old-licenses.txt
             - name: Run Scan code on target
               run: cat refDiffFiles.txt | while read filename; do echo ./new-ref/$filename; done | xargs ./scancode-toolkit/scancode -l -n 30 --json-pp - | grep short_name | sort | uniq >> new-licenses.txt
             # compare

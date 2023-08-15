@@ -1,7 +1,7 @@
 ====================================
 aws-msk-iam-sasl-signer-python
 ====================================
-|Version| |Python| |Build| |License| |Docs|
+|Version| |Python| |Build| |License| |Docs| |SecurityScan|
 
 .. |Build| image:: https://github.com/aws/aws-msk-iam-sasl-signer-python/actions/workflows/run-tests.yml/badge.svg?branch=main
     :target: https://github.com/aws/aws-msk-iam-sasl-signer-python/actions/workflows/run-tests.yml
@@ -18,6 +18,9 @@ aws-msk-iam-sasl-signer-python
 .. |Docs| image:: https://readthedocs.org/projects/aws-msk-iam-sasl-signer-python/badge/?version=latest
     :target: https://aws-msk-iam-sasl-signer-python.readthedocs.io/en/latest/?version=latest
     :alt: Documentation Status
+.. |SecurityScan| image:: https://github.com/aws/aws-msk-iam-sasl-signer-python/actions/workflows/securityscan.yml/badge.svg?branch=main
+    :target: https://github.com/aws/aws-msk-iam-sasl-signer-python/actions/workflows/securityscan.yml
+    :alt: Security Scan
 
 
 This is an Amazon MSK Library in Python. This library provides a function to generates a base 64 encoded signed url
