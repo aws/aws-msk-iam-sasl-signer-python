@@ -112,7 +112,7 @@ def __load_credentials_from_aws_credentials_provider__(
     return aws_credentials_provider.load()
 
 
-def generate_auth_token(region):
+def generate_auth_token(region, aws_debug_creds=False):
     """
     Generates an base64-encoded signed url as auth token to authenticate
     with an Amazon MSK cluster using default IAM credentials.
@@ -125,6 +125,9 @@ def generate_auth_token(region):
 
     # Load credentials
     aws_credentials = __load_default_credentials__()
+
+    if aws_debug_creds and logging.getLogger().isEnabledFor(logging.DEBUG):
+        __log_caller_identity(aws_credentials)
 
     return __construct_auth_token(region, aws_credentials)
 
@@ -206,9 +209,6 @@ def __construct_auth_token(region, aws_credentials):
     # Validate credentials are not empty
     if not aws_credentials.access_key or not aws_credentials.secret_key:
         raise ValueError("AWS Credentials can not be empty")
-
-    if logging.getLogger().isEnabledFor(logging.DEBUG):
-        __log_caller_identity(aws_credentials)
 
     # Extract endpoint URL
     endpoint_url = ENDPOINT_URL_TEMPLATE.format(region)
