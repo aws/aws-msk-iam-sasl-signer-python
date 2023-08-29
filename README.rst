@@ -188,7 +188,12 @@ Troubleshooting
 Finding out which identity is being used
 ------------
 You may receive an Access denied error and there may be some doubt as to which credential is being exactly used. The credential may be sourced from a role ARN, EC2 instance profile, credential profile etc.
-If the client side logging is set to DEBUG then the signer library will print a debug log of the form:
+When calling generate_auth_token(), you can set aws_debug_creds argument to True along with client side logging set to DEBUG then the signer library will print a debug log of the form:
+
+.. code-block:: python
+
+    MSKAuthTokenProvider.generate_auth_token('<my aws region>', aws_debug_creds = True)
+
 
 .. code-block:: sh
 
