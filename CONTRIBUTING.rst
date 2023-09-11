@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/awslabs/aws-msk-iam-sasl-signer-python/issues.
+Report bugs at https://github.com/aws/aws-msk-iam-sasl-signer-python/issues.
 
 If you are reporting a bug, please include:
 
@@ -45,7 +45,7 @@ articles, and such.
 Submit Feedback
 ~~~~~~~~~~~~~~~
 
-The best way to send feedback is to file an issue at https://github.com/awslabs/aws-msk-iam-sasl-signer-python/issues.
+The best way to send feedback is to file an issue at https://github.com/aws/aws-msk-iam-sasl-signer-python/issues.
 
 If you are proposing a feature:
 
@@ -99,9 +99,7 @@ Before you submit a pull request, check that it meets these guidelines:
 2. If the pull request adds functionality, the docs should be updated. Put
    your new functionality into a function with a docstring, and add the
    feature to the list in README.rst.
-3. The pull request should work for Python 3.5, 3.6, 3.7 and 3.8, and for PyPy. Check
-   https://travis-ci.com/awslabs/aws-msk-iam-sasl-signer-python/pull_requests
-   and make sure that the tests pass for all supported Python versions.
+3. The pull request should work for Python >= 3.8, and for PyPi. Make sure that the tests pass for all supported Python versions.
 
 Tips
 ----
@@ -127,6 +125,6 @@ Travis will then deploy to PyPI if tests pass.
 Licensing
 ---------
 
-See the LICENSE - https://github.com/awslabs/aws-msk-iam-sasl-signer-python/blob/master/LICENSE file for our project's licensing. We will ask you to confirm the licensing of your contribution.
+See the LICENSE - https://github.com/aws/aws-msk-iam-sasl-signer-python/blob/main/LICENSE file for our project's licensing. We will ask you to confirm the licensing of your contribution.
 
 We may ask you to sign a Contributor License Agreement (CLA) - http://en.wikipedia.org/wiki/Contributor_License_Agreement for larger changes.
