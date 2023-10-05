@@ -5,7 +5,9 @@
 
 """The setup script."""
 
-from setuptools import find_packages, setup
+from distutils.core import setup
+
+from setuptools import find_packages
 
 with open("README.rst") as readme_file:
     readme = readme_file.read()
@@ -24,16 +26,16 @@ test_requirements = [
 
 setup(
     author="Mohit Paliwal",
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
     description="Amazon MSK Library in Python for SASL/OAUTHBEARER Auth",
     entry_points={
@@ -43,6 +45,7 @@ setup(
     },
     install_requires=requirements,
     license="Apache Software License 2.0",
+    long_description_content_type="text/x-rst",
     long_description=readme + "\n\n" + history,
     include_package_data=True,
     keywords="aws-msk-iam-sasl-signer-python",
@@ -50,7 +53,7 @@ setup(
     packages=find_packages(),
     test_suite="tests",
     tests_require=test_requirements,
-    url="https://github.com/awslabs/aws-msk-iam-sasl-signer-python",
+    url="https://github.com/aws/aws-msk-iam-sasl-signer-python",
     version="0.1.0",
     zip_safe=False,
 )
