@@ -4,7 +4,7 @@
 """Tests for `aws-msk-iam-sasl-signer-python` package."""
 import base64
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest import mock
 from urllib.parse import parse_qs, urlparse
 
@@ -344,9 +344,12 @@ class TestGenerateAuthToken(unittest.TestCase):
         self.assertIsNotNone(query_params["X-Amz-Signature"][0])
         date_obj = datetime.strptime(query_params["X-Amz-Date"][0],
                                      "%Y%m%dT%H%M%SZ")
-        self.assertTrue(date_obj < datetime.utcnow())
+        current_utc_time = datetime.utcnow()
+
+        self.assertTrue(date_obj < current_utc_time)
 
         self.assertTrue(query_params["User-Agent"][0].startswith(LIB_NAME))
         actual_expiration_ms = 1000 * (
-                int(query_params["X-Amz-Expires"][0]) + date_obj.timestamp())
+                int(query_params["X-Amz-Expires"][0])
+                + date_obj.replace(tzinfo=timezone.utc).timestamp())
         self.assertEqual(expiry_ms, actual_expiration_ms)

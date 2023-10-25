@@ -3,7 +3,7 @@
 
 import base64
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlparse
 
 import boto3
@@ -250,8 +250,11 @@ def __get_expiration_time_ms(request):
     # Parse the signed request
     parsed_url = urlparse(request.url)
     parsed_ul_params = parse_qs(parsed_url.query)
-    signing_time = datetime.strptime(parsed_ul_params['X-Amz-Date'][0],
-                                     "%Y%m%dT%H%M%SZ")
+    parsed_signing_time = datetime.strptime(parsed_ul_params['X-Amz-Date'][0],
+                                            "%Y%m%dT%H%M%SZ")
+
+    # Make the datetime object timezone-aware
+    signing_time = parsed_signing_time.replace(tzinfo=timezone.utc)
 
     # Convert the Unix timestamp to milliseconds
     expiration_timestamp_seconds = int(
