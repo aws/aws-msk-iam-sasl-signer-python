@@ -39,10 +39,7 @@ Features
 Get Started
 -----------
 
-* For installation, refer to `installation guide`_:
-
-.. _`installation guide`: <https://github.com/aws/aws-msk-iam-sasl-signer-python/blob/main/CHANGELOG.rst>`__
-
+* For installation, refer to `installation guide`_
 
 * In order to use the signer library with a Kafka client library with SASL/OAUTHBEARER mechanism, add the callback function in your code.
 
@@ -247,4 +244,5 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`dpkp/kafka-python`: https://github.com/dpkp/kafka-python
+.. _`installation guide`: https://github.com/aws/aws-msk-iam-sasl-signer-python/blob/main/docs/installation.rst
 .. _`confluent-kafka-python`: https://github.com/confluentinc/confluent-kafka-python
