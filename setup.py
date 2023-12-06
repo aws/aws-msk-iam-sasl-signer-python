@@ -50,7 +50,7 @@ setup(
     include_package_data=True,
     keywords="aws-msk-iam-sasl-signer-python",
     name="aws-msk-iam-sasl-signer-python",
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests*']),
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/aws/aws-msk-iam-sasl-signer-python",
