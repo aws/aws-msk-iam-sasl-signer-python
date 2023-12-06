@@ -90,7 +90,9 @@ Get Started
     from aws_msk_iam_sasl_signer import MSKAuthTokenProvider
 
     def oauth_cb(oauth_config):
-        return MSKAuthTokenProvider.generate_auth_token("<my aws region>")
+        auth_token, expiry_ms = MSKAuthTokenProvider.generate_auth_token("<my aws region>")
+        # Note that this library expects oauth_cb to return expiry time in seconds since epoch, while the token generator returns expiry in ms
+        return auth_token, expiry_ms/1000
 
     c = Consumer({
         "debug": "all",
