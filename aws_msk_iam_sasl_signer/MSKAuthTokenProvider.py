@@ -129,7 +129,7 @@ def generate_auth_token(region, aws_debug_creds=False):
     if aws_debug_creds and logging.getLogger().isEnabledFor(logging.DEBUG):
         __log_caller_identity(aws_credentials)
 
-    return __construct_auth_token(region, aws_credentials)
+    return construct_auth_token(region, aws_credentials)
 
 
 def generate_auth_token_from_profile(region, aws_profile):
@@ -147,7 +147,7 @@ def generate_auth_token_from_profile(region, aws_profile):
     # Load credentials
     aws_credentials = __load_credentials_from_aws_profile__(aws_profile)
 
-    return __construct_auth_token(region, aws_credentials)
+    return construct_auth_token(region, aws_credentials)
 
 
 def generate_auth_token_from_role_arn(
@@ -167,7 +167,7 @@ def generate_auth_token_from_role_arn(
     aws_credentials = __load_credentials_from_aws_role_arn__(role_arn,
                                                              sts_session_name)
 
-    return __construct_auth_token(region, aws_credentials)
+    return construct_auth_token(region, aws_credentials)
 
 
 def generate_auth_token_from_credentials_provider(region,
@@ -194,10 +194,10 @@ def generate_auth_token_from_credentials_provider(region,
         aws_credentials_provider
     )
 
-    return __construct_auth_token(region, aws_credentials)
+    return construct_auth_token(region, aws_credentials)
 
 
-def __construct_auth_token(region, aws_credentials):
+def construct_auth_token(region, aws_credentials):
     """
     Private function that constructs the authorization token using IAM
     Credentials.
