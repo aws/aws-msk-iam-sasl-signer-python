@@ -15,7 +15,8 @@ with open("README.rst") as readme_file:
 with open("CHANGELOG.rst") as changelog_file:
     history = changelog_file.read()
 
-requirements = ["Click>=7.0", "boto3>=1.26.125", "botocore>=1.29.125"]
+requirements = ["boto3>=1.26,<2.0", "botocore>=1.29,<2.0"]
+cli_requirements = ["Click>=7.0"]
 
 test_requirements = [
     "pytest==7.3.1",
@@ -44,6 +45,9 @@ setup(
         ],
     },
     install_requires=requirements,
+    extras_require={
+        "console_scripts": cli_requirements
+    },
     license="Apache Software License 2.0",
     long_description_content_type="text/x-rst",
     long_description=readme + "\n\n" + history,
