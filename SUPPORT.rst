@@ -13,7 +13,7 @@ Q&A (please complete the following information)
  - OS: [e.g. macOS]
  - Version: [e.g. 22.1.0]
  - Method of installation: [e.g. github]
- - aws-msk-iam-sasl-signer-python version: [e.g. 1.0.0]
+ - aws-msk-iam-sasl-signer-python version: [e.g. 1.0.1]
  - Kafka library name: [e.g. kafka-python]
  - Kafka library version
  - Provide us a sample code snippet of your producer/consumer
