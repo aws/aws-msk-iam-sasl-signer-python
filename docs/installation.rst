@@ -14,14 +14,6 @@ To install aws-msk-iam-sasl-signer-python, run this command in your terminal:
 
     $ pip install aws-msk-iam-sasl-signer-python
 
-
-To install the library and use the CLI
-
-.. code-block:: console
-
-    $ pip install aws-msk-iam-sasl-signer-python[console_scripts]
-
-
 This is the preferred method to install aws-msk-iam-sasl-signer-python, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
