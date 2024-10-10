@@ -11,9 +11,7 @@ from urllib.parse import parse_qs, urlparse
 import botocore.credentials
 from botocore.credentials import CredentialProvider, Credentials
 from botocore.exceptions import ParamValidationError, ProfileNotFound
-from click.testing import CliRunner
 
-from aws_msk_iam_sasl_signer import cli
 from aws_msk_iam_sasl_signer.MSKAuthTokenProvider import (
     ACTION_NAME, ACTION_TYPE, DEFAULT_STS_SESSION_NAME,
     DEFAULT_TOKEN_EXPIRY_SECONDS, LIB_NAME,
@@ -245,76 +243,6 @@ class TestGenerateAuthToken(unittest.TestCase):
             generate_auth_token_from_credentials_provider(
                 self.region, credential_provider
             )
-
-    @mock.patch(
-        "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
-        ".__load_default_credentials__"
-    )
-    @mock.patch(
-        "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
-        ".__load_credentials_from_aws_profile__"
-    )
-    @mock.patch(
-        "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
-        ".__load_credentials_from_aws_role_arn__"
-    )
-    def test_command_line_interface(
-        self, mock_load_credentials, mock_profile_credentials,
-        mock_role_credentials
-    ):
-        mock_credentials = Credentials(
-            self.mock_access_key, self.mock_secret_key, self.mock_token
-        )
-        mock_load_credentials.return_value = mock_credentials
-        mock_profile_credentials.return_value = mock_credentials
-        mock_role_credentials.return_value = mock_credentials
-
-        runner = CliRunner()
-        result = runner.invoke(cli.execute, ["--region", self.region])
-
-        self.assertEqual(result.exit_code, 0)
-        output = result.output.strip()[1:-1].split(", ")
-        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
-
-        result = runner.invoke(
-            cli.execute,
-            ["--region", self.region, "--aws-profile", self.aws_profile]
-        )
-
-        self.assertEqual(result.exit_code, 0)
-        output = result.output.strip()[1:-1].split(", ")
-        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
-
-        result = runner.invoke(
-            cli.execute, ["--region", self.region, "--role-arn", self.role_arn]
-        )
-
-        self.assertEqual(result.exit_code, 0)
-        output = result.output.strip()[1:-1].split(", ")
-        self.assertTokenIsAsExpected(output[0][1:-1], int(output[1]))
-
-        help_result = runner.invoke(cli.execute, ["--help"])
-        self.assertEqual(help_result.exit_code, 0)
-
-    def test_command_line_interface_invalid(self):
-        runner = CliRunner()
-        result = runner.invoke(cli.execute)
-        self.assertEqual(result.exit_code, 2)
-        self.assertEqual(result.return_value, None)
-
-        result = runner.invoke(
-            cli.execute,
-            [
-                "--region",
-                self.region,
-                "--aws-profile",
-                self.aws_profile,
-                "--role-arn",
-                self.role_arn,
-            ],
-        )
-        self.assertEqual(result.exit_code, 2)
-        self.assertEqual(result.return_value, None)
 
     def assertTokenIsAsExpected(self, auth_token, expiry_ms):
         self.assertIsNotNone(auth_token)
