@@ -99,7 +99,7 @@ Get Started
         'bootstrap.servers': "<my bootstrap string>",
         'client.id': socket.gethostname(),
         'security.protocol': 'SASL_SSL',
-        'sasl.mechanisms': 'OAUTHBEARER',
+        'sasl.mechanism': 'OAUTHBEARER',
         'oauth_cb': oauth_cb,
         'group.id': 'mygroup',
         'auto.offset.reset': 'earliest'
