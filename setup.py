@@ -36,12 +36,17 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
     description="Amazon MSK Library in Python for SASL/OAUTHBEARER Auth",
     entry_points={
         "console_scripts": [
             "aws_msk_get_auth_token=aws_msk_iam_sasl_signer.cli:execute",
         ],
+    },
+    extras_require={
+        'test': test_requirements,
     },
     install_requires=requirements,
     license="Apache Software License 2.0",

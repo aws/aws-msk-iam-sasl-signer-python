@@ -2,13 +2,13 @@
 #  SPDX-License-Identifier: Apache-2.0
 
 import base64
+import importlib.metadata
 import logging
 from datetime import datetime, timezone
 from urllib.parse import parse_qs, urlparse
 
 import boto3
 import botocore.session
-import pkg_resources
 from botocore.auth import SigV4QueryAuth
 from botocore.awsrequest import AWSRequest
 from botocore.config import Config
@@ -31,7 +31,7 @@ def __get_user_agent__():
     Returns:
         str: The user-agent identifying this signer library.
     """
-    return f"{LIB_NAME}/{pkg_resources.get_distribution(LIB_NAME).version}"
+    return f"{LIB_NAME}/{importlib.metadata.version(LIB_NAME)}"
 
 
 def __load_default_credentials__():
