@@ -49,11 +49,12 @@ Get Started
 
     from kafka import KafkaProducer
     from kafka.errors import KafkaError
+    from kafka.sasl.oauth import AbstractTokenProvider
     import socket
     import time
     from aws_msk_iam_sasl_signer import MSKAuthTokenProvider
 
-    class MSKTokenProvider():
+    class MSKTokenProvider(AbstractTokenProvider):
         def token(self):
             token, _ = MSKAuthTokenProvider.generate_auth_token('<my aws region>')
             return token
@@ -125,7 +126,7 @@ Get Started
 
 .. code-block:: python
 
-    class MSKTokenProvider():
+    class MSKTokenProvider(AbstractTokenProvider):
         def token(self):
             oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_profile('<your aws region>', '<named_profile>')
             return oauth2_token
@@ -134,7 +135,7 @@ Get Started
 
 .. code-block:: python
 
-    class MSKTokenProvider():
+    class MSKTokenProvider(AbstractTokenProvider):
         def token(self):
             oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_role_arn('<your aws region>', '<role_arn>')
             return oauth2_token
@@ -144,7 +145,7 @@ Get Started
 
 .. code-block:: python
 
-    class MSKTokenProvider():
+    class MSKTokenProvider(AbstractTokenProvider):
         def token(self):
             oauth2_token, _ = MSKAuthTokenProvider.generate_auth_token_from_credentials_provider('<your aws region>', '<your_credentials_provider')
             return oauth2_token
