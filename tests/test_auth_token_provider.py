@@ -4,7 +4,7 @@
 """Tests for `aws-msk-iam-sasl-signer-python` package."""
 import base64
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest import mock
 from urllib.parse import parse_qs, urlparse
 
@@ -44,6 +44,39 @@ class TestGenerateAuthToken(unittest.TestCase):
         self.mock_access_key = "MOCK_AWS_ACCESS_KEY"
         self.mock_secret_key = "MOCK_AWS_SECRET_KEY"
         self.mock_token = "MOCK_AWS_TOKEN"
+
+    @mock.patch(
+        "aws_msk_iam_sasl_signer.MSKAuthTokenProvider"
+        ".__load_default_credentials__"
+    )
+    def test_token_uses_one_refreshable_credential_generation(self, loader):
+        now = datetime.now(timezone.utc)
+        generations = []
+
+        def refresh():
+            generation = str(len(generations) + 1)
+            generations.append(generation)
+            return dict(
+                access_key="access" + generation,
+                secret_key="secret" + generation,
+                token="token" + generation,
+                expiry_time=(now + timedelta(minutes=5)).isoformat(),
+            )
+
+        loader.return_value = botocore.credentials.RefreshableCredentials(
+            access_key="initial", secret_key="initial", token="initial",
+            expiry_time=now + timedelta(minutes=5), refresh_using=refresh,
+            method="test", time_fetcher=lambda: now,
+        )
+        token, _ = generate_auth_token(self.region)
+        signed_url = base64.urlsafe_b64decode(
+            token + "=" * (-len(token) % 4)
+        ).decode("utf-8")
+        params = parse_qs(urlparse(signed_url).query)
+
+        self.assertEqual(generations, ["1"])
+        self.assertTrue(params["X-Amz-Credential"][0].startswith("access1/"))
+        self.assertEqual(params["X-Amz-Security-Token"], ["token1"])
 
     def test_generate_auth_token_with_invalid_credentials_type(self):
         aws_credentials = {"AccessKeyId": self.mock_access_key}
