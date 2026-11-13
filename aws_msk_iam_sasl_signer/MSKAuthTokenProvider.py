@@ -206,6 +206,9 @@ def __construct_auth_token(region, aws_credentials):
     aws_credentials (dict): The credentials to be used to generate signed
     url. Returns: str: A base64-encoded authorization token.
     """
+    # Keep the signing inputs from the same refreshable credential generation.
+    aws_credentials = aws_credentials.get_frozen_credentials()
+
     # Validate credentials are not empty
     if not aws_credentials.access_key or not aws_credentials.secret_key:
         raise ValueError("AWS Credentials can not be empty")
